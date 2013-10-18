@@ -6,23 +6,23 @@ dest_path = '/data/data/org.chromium.obigo_browser_apk'
 result = 'result.txt'
 
 def travel(rpath):
+  print 'travel: ' + rpath
   dirs = []
   for f in os.listdir(rpath):
-    print f
     cpath = os.path.join(rpath, f)
     if os.path.isdir(cpath):
-      if f != '.svn':
+      if f != '.svn' and f != '.git':
         fd.write('adb shell mkdir ' + os.path.join(dest_path, cpath) + os.linesep)
-        print cpath
+        #print cpath
         dirs.append(f)
     else:
       fd.write('adb push ' + cpath + ' ' + os.path.join(dest_path, cpath) + os.linesep)
 
   for d in dirs:
-    print '2 ' + d
+    #print '2 ' + d
     travel(os.path.join(rpath, d))
 
-fd = open('result.txt','w')
+fd = open('result.sh','w')
 fd.write('adb shell mkdir ' +  os.path.join(dest_path, sys.argv[1]) + os.linesep)
 travel(sys.argv[1])
 fd.close()
