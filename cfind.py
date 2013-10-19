@@ -40,3 +40,8 @@ def find_c(path='.'):
 def find_h(path='.'):
   f = cfind('.noh', '.*\.h')
   f.travel(path)
+
+def find_java(path='.'):
+  f = cfind('.nojava', '.*\.java')
+  f.travel(path)
+
