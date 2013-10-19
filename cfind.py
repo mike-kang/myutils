@@ -2,33 +2,41 @@ import sys
 import os 
 import re
 
-ignores_gyp =[ './third_party/android_tools', './tools/gyp/test/mac']
+class cfind(object):
+  def __init__(self, ignore, regex):
+    self.ignore = ignore
+    self.regex = regex
+  
+  def travel(self, repath):
+    #print 'travel ' + repath
+    if self.ignore in os.listdir(repath):
+      return
 
-def travel_gyp(repath):
-  #print 'travel ' + repath
-  dirs = []
-  for f in os.listdir(repath):
-    #print f
-    path = os.path.join(repath, f)
-    if os.path.islink(path):
-      continue
-    if os.path.isdir(path):
-      bfind = False
-      for i in ignores_gyp:
-        if i == path:
-          bfind = True
-      if bfind:
+    dirs = []
+    for f in os.listdir(repath):
+      #print f
+      cpath = os.path.join(repath, f)
+      if os.path.islink(cpath):
         continue
-      if f != '.git' and f != '.svn':
-        dirs.append(f)
-    elif os.path.isfile(path):
-      #print path
-      if re.match('.*\.gypi?', f) != None:
-        print path
+      if os.path.isdir(cpath):
+        if f != '.git' and f != '.svn':
+          dirs.append(f)
+      elif os.path.isfile(cpath):
+        #print path
+        if re.match(self.regex, f) != None:
+          print cpath
 
-  for d in dirs:
-    travel_gyp(os.path.join(repath, d))
+    for d in dirs:
+      self.travel(os.path.join(repath, d))
 
-def find(path='.'):
-  travel_gyp(path)
+def find_gyp(path='.'):
+  f = cfind('.nogyp', '.*\.gypi?')
+  f.travel(path)
  
+def find_c(path='.'):
+  f = cfind('.noc', '.*\.(c|cc|cpp)')
+  f.travel(path)
+
+def find_h(path='.'):
+  f = cfind('.noh', '.*\.h')
+  f.travel(path)
