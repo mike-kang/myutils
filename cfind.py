@@ -3,12 +3,12 @@ import os
 import re
 
 class cfind(object):
-  def __init__(self, ignore, regex):
+  def __init__(self, ignore):
     self.ignore = ignore
-    self.regex = regex
   
   def travel(self, repath):
     #print 'travel ' + repath
+    
     if self.ignore in os.listdir(repath):
       return
 
@@ -23,25 +23,48 @@ class cfind(object):
           dirs.append(f)
       elif os.path.isfile(cpath):
         #print path
-        if re.match(self.regex, f) != None:
+        if self.checkext(f):
           print cpath
 
     for d in dirs:
       self.travel(os.path.join(repath, d))
 
+class cfind_gyp(cfind):
+  def checkext(self, name):
+    if name.endswith('.gyp') or name.endswith('.gypi'):
+      return True
+    return False
+
+class cfind_c(cfind):
+  def checkext(self, name):
+    if name.endswith('.c') or name.endswith('.cc') or name.endswith('.cpp'):
+      return True
+    return False
+
+class cfind_h(cfind):
+  def checkext(self, name):
+    if name.endswith('.h'):
+      return True
+    return False
+
+class cfind_java(cfind):
+  def checkext(self, name):
+    if name.endswith('.java'):
+      return True
+    return False
+
 def find_gyp(path='.'):
-  f = cfind('.nogyp', '.*\.gypi?')
-  f.travel(path)
+  c = cfind_gyp('.nogyp')
+  c.travel(path)
  
 def find_c(path='.'):
-  f = cfind('.noc', '.*\.(c|cc|cpp)')
-  f.travel(path)
+  c = cfind_c('.noc')
+  c.travel(path)
 
 def find_h(path='.'):
-  f = cfind('.noh', '.*\.h')
-  f.travel(path)
+  c = cfind_h('.noh')
+  c.travel(path)
 
 def find_java(path='.'):
-  f = cfind('.nojava', '.*\.java')
-  f.travel(path)
-
+  c = cfind_java('.nojava')
+  c.travel(path)
