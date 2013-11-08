@@ -33,3 +33,14 @@ function findj()
     python -c "import cfind; cfind.find_java('$1')"
   fi
 }
+
+function cgrep()
+{
+  cat .c_list | xargs grep $1 2> /dev/null
+}
+
+function hgrep()
+{
+  cat .h_list | xargs grep $1 2> /dev/null
+}
+
