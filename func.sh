@@ -36,11 +36,15 @@ function findj()
 
 function cgrep()
 {
-  cat .c_list | xargs grep $1 2> /dev/null
+  cat .c_list | xargs grep "$*" 2> /dev/null
 }
 
 function hgrep()
 {
-  cat .h_list | xargs grep $1 2> /dev/null
+  cat .h_list | xargs grep "$*" 2> /dev/null
 }
 
+function jgrep()
+{
+  cat .j_list | xargs grep "$*" 2> /dev/null
+}
